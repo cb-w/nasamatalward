@@ -1,0 +1,146 @@
+const express = require("express");
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("الموقع شغال 🔥");
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+});
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>متجر الهدايا والعطور | هدايا فاخرة وعطور مميزة</title>
+  <meta name="description" content="متجر هدايا وعطور أونلاين. عطور فاخرة وهدايا مميزة بأسعار مناسبة. اطلب الآن وتوصيل لجميع المناطق.">
+  <meta name="keywords" content="عطور، هدايا، متجر عطور، هدايا أونلاين، عطور رجالية، عطور نسائية">
+  <meta name="author" content="متجر الهدايا والعطور">
+  <!-- Open Graph (عند مشاركة الرابط في واتساب، تويتر، فيسبوك) -->
+  <meta property="og:title" content="متجر الهدايا والعطور">
+  <meta property="og:description" content="هدايا تخلد اللحظات — عطور فاخرة وهدايا مميزة">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_SA">
+  <link rel="canonical" href="/" id="canonical-url">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="/" class="logo">هدايا وعطور</a>
+      <nav class="nav">
+        <a href="#products">المنتجات</a>
+        <a href="#about">من نحن</a>
+        <a href="#contact">تواصل</a>
+      </nav>
+      <div class="header-actions">
+        <button type="button" class="cart-btn" id="cartBtn" aria-label="سلة التسوق">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <a href="/admin" class="admin-link">لوحة التحكم</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="container hero-content">
+        <h1>هدايا تخلد اللحظات</h1>
+        <p>عطور فاخرة وهدايا مميزة تناسب كل مناسبة</p>
+        <a href="#products" class="btn btn-primary">تصفح المنتجات</a>
+      </div>
+    </section>
+
+    <section class="products" id="products">
+      <div class="container">
+        <h2 class="section-title">منتجاتنا</h2>
+        <div class="filter-tabs">
+          <button type="button" class="filter-tab active" data-category="all">الكل</button>
+          <button type="button" class="filter-tab" data-category="عطور">عطور</button>
+          <button type="button" class="filter-tab" data-category="هدايا">هدايا</button>
+        </div>
+        <div class="products-grid" id="productsGrid">
+          <p class="loading" id="productsLoading">جاري تحميل المنتجات...</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="container">
+        <h2 class="section-title">من نحن</h2>
+        <p class="about-text">نقدم لكم تشكيلة مختارة من العطور والهدايا بجودة عالية وأسعار مناسبة. نؤمن بأن كل هدية تحمل معنىً خاصاً، لذلك نسعى لمساعدتك في اختيار الأنسب.</p>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="container">
+        <h2 class="section-title">تواصل معنا</h2>
+        <p>للاستفسارات: يمكنك إتمام الطلب عبر الموقع وسنتواصل معك لتأكيد التفاصيل والتوصيل.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© متجر الهدايا والعطور. جميع الحقوق محفوظة.</p>
+    </div>
+  </footer>
+
+  <!-- سلة التسوق (جانبية) -->
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer-header">
+      <h3>سلة التسوق</h3>
+      <button type="button" class="close-cart" id="closeCart">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-total">المجموع: <span id="cartTotal">0</span> ر.س</div>
+      <button type="button" class="btn btn-primary btn-block" id="checkoutBtn">إتمام الطلب</button>
+    </div>
+  </aside>
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <!-- نموذج إتمام الطلب -->
+  <div class="modal" id="checkoutModal">
+    <div class="modal-content">
+      <button type="button" class="modal-close" id="closeCheckout">✕</button>
+      <h3>معلومات الطلب</h3>
+      <form id="checkoutForm">
+        <div class="form-group">
+          <label>الاسم الكامل *</label>
+          <input type="text" name="customerName" required placeholder="أدخل اسمك">
+        </div>
+        <div class="form-group">
+          <label>رقم الجوال *</label>
+          <input type="tel" name="phone" required placeholder="05xxxxxxxx">
+        </div>
+        <div class="form-group">
+          <label>البريد الإلكتروني</label>
+          <input type="email" name="email" placeholder="example@email.com">
+        </div>
+        <div class="form-group">
+          <label>العنوان / المدينة *</label>
+          <input type="text" name="address" required placeholder="المدينة والحي والتفاصيل">
+        </div>
+        <div class="form-group">
+          <label>ملاحظات</label>
+          <textarea name="notes" rows="3" placeholder="ملاحظات إضافية للطلب"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">تأكيد الطلب</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- رسالة نجاح الطلب -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

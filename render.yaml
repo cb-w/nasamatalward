@@ -1,0 +1,10 @@
+# نشر مجاني على Render — يعطيك رابط مثل: https://gift-perfume-store.onrender.com
+services:
+  - type: web
+    name: gift-perfume-store
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production

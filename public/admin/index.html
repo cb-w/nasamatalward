@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>لوحة التحكم - متجر الهدايا والعطور</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <h1>لوحة التحكم</h1>
+      <p>أدخل كلمة المرور للدخول</p>
+      <form id="loginForm">
+        <input type="password" id="adminPassword" placeholder="كلمة المرور" required autocomplete="current-password">
+        <button type="submit" class="btn btn-primary">دخول</button>
+      </form>
+      <p class="login-hint">الافتراضي: admin123 (غيّره من الإعدادات بعد الدخول)</p>
+    </div>
+  </div>
+
+  <div id="adminPanel" class="admin-panel hidden">
+    <header class="admin-header">
+      <div class="admin-header-inner">
+        <h1>لوحة التحكم</h1>
+        <div class="admin-links">
+          <a href="/">عرض المتجر</a>
+          <button type="button" id="logoutBtn">تسجيل الخروج</button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="admin-tabs">
+      <button type="button" class="admin-tab active" data-tab="products">المنتجات</button>
+      <button type="button" class="admin-tab" data-tab="orders">الطلبات</button>
+      <button type="button" class="admin-tab" data-tab="settings">الإعدادات</button>
+    </nav>
+
+    <main class="admin-main container">
+      <!-- المنتجات -->
+      <section id="tab-products" class="tab-content active">
+        <div class="section-header">
+          <h2>إدارة المنتجات</h2>
+          <button type="button" class="btn btn-primary" id="addProductBtn">+ إضافة منتج</button>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>الصورة</th>
+                <th>الاسم</th>
+                <th>الفئة</th>
+                <th>السعر (ر.س)</th>
+                <th>الحالة</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <tr><td colspan="6" class="text-muted">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- الطلبات -->
+      <section id="tab-orders" class="tab-content">
+        <h2>الطلبات الواردة</h2>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>رقم الطلب</th>
+                <th>العميل</th>
+                <th>الجوال</th>
+                <th>المبلغ</th>
+                <th>التاريخ</th>
+                <th>الحالة</th>
+                <th>تفاصيل</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <tr><td colspan="7" class="text-muted">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- الإعدادات -->
+      <section id="tab-settings" class="tab-content">
+        <h2>الإعدادات</h2>
+        <form id="settingsForm" class="settings-form">
+          <div class="form-group">
+            <label>اسم المتجر</label>
+            <input type="text" id="storeName" placeholder="اسم المتجر">
+          </div>
+          <div class="form-group">
+            <label>كلمة مرور لوحة التحكم</label>
+            <input type="password" id="newPassword" placeholder="اتركه فارغاً للإبقاء على الحالية">
+          </div>
+          <button type="submit" class="btn btn-primary">حفظ الإعدادات</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <!-- نافذة إضافة/تعديل منتج -->
+  <div class="modal" id="productModal">
+    <div class="modal-content modal-lg">
+      <button type="button" class="modal-close" id="closeProductModal">✕</button>
+      <h3 id="productModalTitle">إضافة منتج</h3>
+      <form id="productForm">
+        <input type="hidden" id="productId">
+        <div class="form-row">
+          <div class="form-group">
+            <label>اسم المنتج (عربي) *</label>
+            <input type="text" id="productName" required placeholder="مثال: عطر فلورال">
+          </div>
+          <div class="form-group">
+            <label>اسم المنتج (إنجليزي)</label>
+            <input type="text" id="productNameEn" placeholder="Optional">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>الفئة *</label>
+            <select id="productCategory">
+              <option value="عطور">عطور</option>
+              <option value="هدايا">هدايا</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>السعر (ر.س) *</label>
+            <input type="number" id="productPrice" required min="0" step="0.01" placeholder="0.00">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>الوصف</label>
+          <textarea id="productDescription" rows="3" placeholder="وصف قصير للمنتج"></textarea>
+        </div>
+        <div class="form-group">
+          <label>صورة المنتج</label>
+          <input type="file" id="productImageInput" accept="image/*">
+          <p class="form-hint">أو اترك الحقل فارغاً لاستخدام أيقونة افتراضية</p>
+          <div class="current-image" id="currentImageWrap" style="display:none">
+            <span>الصورة الحالية:</span>
+            <img id="currentImage" alt="">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="productActive" checked>
+            المنتج ظاهر في المتجر
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelProductBtn">إلغاء</button>
+          <button type="submit" class="btn btn-primary">حفظ المنتج</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- تفاصيل الطلب -->
+  <div class="modal" id="orderDetailModal">
+    <div class="modal-content modal-lg">
+      <button type="button" class="modal-close" id="closeOrderDetail">✕</button>
+      <h3>تفاصيل الطلب <span id="orderDetailId"></span></h3>
+      <div id="orderDetailContent"></div>
+      <div class="form-group">
+        <label>تحديث الحالة</label>
+        <select id="orderStatusSelect">
+          <option value="جديد">جديد</option>
+          <option value="قيد التحضير">قيد التحضير</option>
+          <option value="تم الشحن">تم الشحن</option>
+          <option value="مكتمل">مكتمل</option>
+          <option value="ملغي">ملغي</option>
+        </select>
+        <button type="button" class="btn btn-primary" id="updateOrderStatusBtn">تحديث</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="adminToast"></div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
